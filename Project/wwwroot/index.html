@@ -113,17 +113,22 @@
 
 
     <script>
-      var cards =['king.png', 'ace.png', 'nine.png', 'seven.png']
-      var cardsRow1 = Array.from(cards);
-      var cardsRow2 = Array.from(cards);
+      var cards =['king.png', 'ace.png', 'nine.png', 'seven.png', 'king.png', 'ace.png', 'nine.png', 'seven.png']
+      var cardsArray = []
+      var lastCardTurned 
+     
+      var front = "http://localhost:5000/images/king.png"
+      var back = "http://localhost:5000/images/back.png"
+
+      ShuffleCardsRows()
 
       function ShuffleCardsRows(){
 
-        cardsRow1 = Shuffle(cardsRow1)
-        console.log(cardsRow1)
-        
-        cardsRow2 = Shuffle(cardsRow2)
-        console.log(cardsRow2)
+        cardsTurned = []
+        let images = document.getElementsByTagName("img");
+        for (elem of images)
+          elem.src = back
+         cardsArray = Array.from(cards);
 
         function Shuffle(cardsArray){
           var currentIndex = cardsArray.length, temporaryValue, randomIndex;
@@ -141,22 +146,23 @@
       }
 
 
-     
-      var front = "http://localhost:5000/images/king.png"
-      var back = "http://localhost:5000/images/back.png"
-
       function TurnCard(elem) {
         var idCard = elem.id.substring((elem.id).lastIndexOf('_') + 1)
-        if(idCard < 4){
-          var currentCards = Array.from(cardsRow1)
-        }
-        else {
-          var currentCards = Array.from(cardsRow2)
-          idCard =- 4
-        }
-        console.log(idCard,currentCards, currentCards[idCard])  
-        let src = elem.src == back ? "http://localhost:5000/images/" + currentCards[idCard] : back; 
+
+        let src = elem.src == back ? "http://localhost:5000/images/" + cardsArray[idCard] : back; 
           turn(elem, src)
+        //not correctly working
+        if(lastCardTurned != undefined){
+          if (lastCardTurned.src != elem.src){
+            lastCardTurned.src = back
+            elem.back
+          }
+          lastCardTurned = undefined
+        
+        } else{
+          lastCardTurned = elem
+        }
+       
       }
 
       function turn(elem, src) {
@@ -169,8 +175,6 @@
                 .removeClass("flipping")
         })
       }
-
-      var images = document.getElementsByTagName("img");
 
 
     </script>
