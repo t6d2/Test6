@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <title>memory</title>
+  <style>
+
+    .title {
+      text-align: center
+    }
+
+    button {
+      border-radius: 1em;
+      border-color: black 1px;
+      width: 10em;
+      height: 4em;
+      font-size: 1rem
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f8f8f8;
+      font-family: "Tahoma";
+    }
+
+    .container {
+      margin: 10px auto 0;
+      max-width: 800px;
+      min-width: 400px;
+      background-color: white;
+      border: 2px rgb(12, 20, 134) solid;
+      border-radius: 1em;
+      padding: 0.5em;
+    }
+
+    row {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: center;
+    }
+    
+    .cards-row {
+      display: flex;
+      flex-direction: row;
+      justify-content:space-between;
+      margin: 1em;
+      padding: 2em;
+    }
+
+    .card {
+      width:90px;
+      height:120px;
+      -webkit-transition:-webkit-transform 0.5s;
+      transition:transform 0.5s;
+      background:#FF0;
+      cursor: pointer;
+    }
+
+    .flipping {
+      transform: translate(0, 20px) rotateY(90deg);
+      -webkit-transform: translate(0, 20px) rotateY(90deg);
+    }
+
+    /* .cards-row > card {
+      display: inline;
+      margin: 0.2em 0 0;
+      font-size: 1.2em;
+      width: 100%;
+      padding: 0.3em 0.5em;
+      border-radius: 0.2em;
+      border: 1px solid #ddd;  
+    }      */
+
+  </style>
+
+  </head>
+  <body>
+    <header>
+      <div class="title">
+        <h1 id="id_title" class="title">Memory </h1>
+      </div>
+      <div class="title">
+        <button onclick="ShuffleCardsRows();">Start</button>
+      </div>
+      
+    </header>
+
+    <div class="container">
+      
+  
+      <main>
+        <div class="cards-row"  >
+          <img id="id_card_0" class="card turn" onclick="TurnCard(this);" src="http://localhost:5000/images/back.png"/>
+          <img id="id_card_1" class="card turn" onclick="TurnCard(this);" src="http://localhost:5000/images/back.png"/>
+          <img id="id_card_2" class="card turn" onclick="TurnCard(this);" src="http://localhost:5000/images/back.png"/>
+          <img id="id_card_3" class="card turn" onclick="TurnCard(this);" src="http://localhost:5000/images/back.png"/>
+        </div>
+        <div class="cards-row" >
+          <img id="id_card_4" class="card turn" onclick="TurnCard(this);" src="http://localhost:5000/images/back.png"/>
+          <img id="id_card_5" class="card turn" onclick="TurnCard(this);" src="http://localhost:5000/images/back.png"/>
+          <img id="id_card_6" class="card turn" onclick="TurnCard(this);" src="http://localhost:5000/images/back.png"/>
+          <img id="id_card_7" class="card turn" onclick="TurnCard(this);" src="http://localhost:5000/images/back.png"/>
+        </div>
+          
+  
+      </main>
+    </div>
+
+
+    <script>
+      var cards =['king.png', 'ace.png', 'nine.png', 'seven.png']
+      var cardsRow1 = Array.from(cards);
+      var cardsRow2 = Array.from(cards);
+
+      function ShuffleCardsRows(){
+
+        cardsRow1 = Shuffle(cardsRow1)
+        console.log(cardsRow1)
+        
+        cardsRow2 = Shuffle(cardsRow2)
+        console.log(cardsRow2)
+
+        function Shuffle(cardsArray){
+          var currentIndex = cardsArray.length, temporaryValue, randomIndex;
+
+          while (0 !== currentIndex) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            temporaryValue = cardsArray[currentIndex];
+            cardsArray[currentIndex] = cardsArray[randomIndex];
+            cardsArray[randomIndex] = temporaryValue;
+          }
+          return cardsArray
+        }
+      }
+
+
+     
+      var front = "http://localhost:5000/images/king.png"
+      var back = "http://localhost:5000/images/back.png"
+
+      function TurnCard(elem) {
+        var idCard = elem.id.substring((elem.id).lastIndexOf('_') + 1)
+        if(idCard < 4){
+          var currentCards = Array.from(cardsRow1)
+        }
+        else {
+          var currentCards = Array.from(cardsRow2)
+          idCard =- 4
+        }
+        console.log(idCard,currentCards, currentCards[idCard])  
+        let src = elem.src == back ? "http://localhost:5000/images/" + currentCards[idCard] : back; 
+          turn(elem, src)
+      }
+
+      function turn(elem, src) {
+        $(elem)
+            .addClass("flipping")
+            .bind("transitionend webkittransitionend", function () { 
+            this.src = src;
+            $(this)
+                .unbind("transitionend webkittransitionend")
+                .removeClass("flipping")
+        })
+      }
+
+      var images = document.getElementsByTagName("img");
+
+
+    </script>
+  </body  >
+</html>
